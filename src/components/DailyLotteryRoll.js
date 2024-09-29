@@ -5,6 +5,7 @@ const DailyLotteryRoll = () => {
   const [error, setError] = useState('');
   const [lotteryResult, setLotteryResult] = useState({ numbers: [], specialNumber: null }); // Stored lottery result
   const [matchResult, setMatchResult] = useState('');
+  const [showResult, setShowResult] = useState(false);  // New state for toggling result visibility
 
   // Handle manual input of numbers
   const handleNumberChange = (index, value) => {
@@ -82,6 +83,11 @@ const DailyLotteryRoll = () => {
     }
   };
 
+  // Toggle the visibility of the stored lottery result
+  const toggleResultVisibility = () => {
+    setShowResult(!showResult);
+  };
+
   return (
     <div>
       <h2>Daily Lottery Roll</h2>
@@ -123,11 +129,24 @@ const DailyLotteryRoll = () => {
         </div>
       )}
 
+
+
+      <br/><br/>
       {/* Tester Feature: Display stored lottery result */}
       <div style={{ marginTop: '20px' }}>
-        <h3>Stored Lottery Result (Tester):</h3>
-        <p>Numbers: {lotteryResult.numbers.join(', ')}</p>
-        <p>Special Number: {lotteryResult.specialNumber}</p>
+        <h3>
+          Stored Lottery Result (Tester):{' '}
+          <button onClick={toggleResultVisibility}>
+            {showResult ? '-' : '+'}
+          </button>
+          
+        </h3>
+        {showResult && (
+          <div>
+            <p>Numbers: {lotteryResult.numbers.join(', ')}</p>
+            <p>Special Number: {lotteryResult.specialNumber}</p>
+          </div>
+        )}
       </div>
     </div>
   );
