@@ -6,6 +6,7 @@ const DailyLotteryRoll = () => {
   const [lotteryResult, setLotteryResult] = useState({ numbers: [], specialNumber: null }); // Stored lottery result
   const [matchResult, setMatchResult] = useState('');
   const [showResult, setShowResult] = useState(false);  // New state for toggling result visibility
+  const [matchedCount, setMatchedCount] = useState(0);  // Count of matched numbers
 
   // Handle manual input of numbers
   const handleNumberChange = (index, value) => {
@@ -61,12 +62,13 @@ const DailyLotteryRoll = () => {
     return true;
   };
 
-  // Compare input numbers with the stored lottery result
+  // Compare input numbers with the stored lottery result and update matched count
   const compareNumbers = () => {
     const inputNumbers = numbers.map(num => parseInt(num, 10));
     const resultNumbers = [...lotteryResult.numbers, lotteryResult.specialNumber];  // Combine numbers and special number
 
     const matchedNumbers = inputNumbers.filter(num => resultNumbers.includes(num));
+    setMatchedCount(matchedNumbers.length);
 
     if (matchedNumbers.length === 6) {
       setMatchResult('Bingo!');
@@ -86,6 +88,11 @@ const DailyLotteryRoll = () => {
   // Toggle the visibility of the stored lottery result
   const toggleResultVisibility = () => {
     setShowResult(!showResult);
+  };
+
+  // Check if a number is matched to apply styling
+  const isMatched = (num) => {
+    return numbers.map(Number).includes(num);
   };
 
   return (
@@ -129,9 +136,7 @@ const DailyLotteryRoll = () => {
         </div>
       )}
 
-
-
-      <br/><br/>
+      <br /><br />
       {/* Tester Feature: Display stored lottery result */}
       <div style={{ marginTop: '20px' }}>
         <h3>
@@ -139,12 +144,28 @@ const DailyLotteryRoll = () => {
           <button onClick={toggleResultVisibility}>
             {showResult ? '-' : '+'}
           </button>
-          
         </h3>
+
         {showResult && (
           <div>
-            <p>Numbers: {lotteryResult.numbers.join(', ')}</p>
-            <p>Special Number: {lotteryResult.specialNumber}</p>
+            <p>
+              Numbers:{' '}
+              {lotteryResult.numbers.sort((a, b) => a - b).map((num, index) => (
+                <span
+                  key={index}
+                  style={{ color: isMatched(num) ? 'red' : 'black', marginRight: '5px' }}
+                >
+                  {num}
+                </span>
+              ))}
+            </p>
+            <p>
+              Special Number:{' '}
+              <span style={{ color: isMatched(lotteryResult.specialNumber) ? 'red' : 'black' }}>
+                {lotteryResult.specialNumber}
+              </span>
+            </p>
+            <p>Matched Numbers: {matchedCount}</p>
           </div>
         )}
       </div>
